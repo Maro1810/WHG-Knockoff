@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,33 +17,44 @@ import javax.swing.Timer;
 
 public class Frame extends JPanel implements ActionListener, KeyListener, MouseListener{
 	Player player = new Player(10, 30);
+	Timer timer;
 
-	Ball ball = new Ball(70, 80);
+	ArrayList<Ball> balls = new ArrayList<Ball>();
+
 
 	boolean up, down, left, right;
 	
 	public void paint(Graphics g) {
-		super.paintComponent(g);
-		
-		player.draw(g);
-		ball.draw(g);
+		super.paintComponent(g);	
 
-		repaint();
+		player.draw(g);
+
+		for (Ball ball : balls) {
+			ball.draw(g);
+		}
+		
+
 		player.update();
-		update();
 	}
 	public void update() {
 		if (up) {
-			player.move(0, -1);
+			player.move(0, -3);
 		}
 		if (down) {
-			player.move(0, 1);
+			player.move(0, 3);
 		}
 		if (right) {
-			player.move(1, 0);
+			player.move(3, 0);
 		}
 		if (left) {
-			player.move(-1, 0);
+			player.move(-3, 0);
+		}
+		for (Ball ball : balls) {
+
+		if (ball.hitboxTriggered(player.getCurrentPosition()[0], player.getCurrentPosition()[1])) {
+			player.setPosition(player.getStartPosition()[0], player.getStartPosition()[1]);
+		}
+
 		}
 		
 	}
@@ -59,6 +71,13 @@ public class Frame extends JPanel implements ActionListener, KeyListener, MouseL
 			f.addKeyListener(this);
 			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			f.setVisible(true);
+
+			for (int i = 20; i < 800; i+=50) {
+				balls.add(new Ball(i, 50, BallSize.MEDIUM, 0, 10));
+			}
+			
+			timer = new Timer(16, this);
+        	timer.start();
 			
 		
 	}
@@ -135,6 +154,13 @@ public class Frame extends JPanel implements ActionListener, KeyListener, MouseL
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		update();
+
+		for (Ball ball : balls) {
+			ball.move();
+		}
+		
+		repaint();
 
 	}
 

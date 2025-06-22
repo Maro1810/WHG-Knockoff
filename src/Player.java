@@ -13,6 +13,9 @@ public class Player {
     private int xpos;
     private int ypos;
 
+    public int xStartPos;
+    public int yStartPos;
+
     Image img;
     AffineTransform tx;
 
@@ -26,6 +29,9 @@ public class Player {
 
         xpos = x;
         ypos = y;
+
+        xStartPos = x;
+        yStartPos = y;
 
         updateTransform(x, y);
     }
@@ -53,6 +59,18 @@ public class Player {
         ypos += y;
 
         updateTransform(xpos, ypos);
+    }
+
+    public int[] getStartPosition() {
+        int[] startPos = {xStartPos, yStartPos};
+        
+        return startPos;
+    }
+
+    public int[] getCurrentPosition() {
+        int[] currPos = {xpos, ypos};
+
+        return currPos;
     }
 
     private void updateTransform(int x, int y) {
